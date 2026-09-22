@@ -268,3 +268,40 @@ four clips return video/mp4, and no `cdn.cuberto` string remains in src/ or inde
 
 Verification: `tsc -b`, `oxlint src`, clean build (144 KB gzip JS, CSS down to 8.15 KB gzip
 after the dead rules were dropped). Served on :5187, page and hero clip both 200.
+
+## 2026-09-22 — Deployed to GitHub Pages
+
+Live at **https://amanathumancloud.github.io/**
+Repo: https://github.com/AmanAtHumancloud/AmanAtHumancloud.github.io
+
+Blocker found before pushing: `gh` was authenticated as **AmanAtHumancloud**, but the whole
+site had been built for **Amanzing01** (canonical URL, OG tags, README). Asked rather than
+guessing, since the answer changes the repo name and every absolute URL. User chose to
+publish under AmanAtHumancloud, so canonical/og:url/og:image, the OG card caption and the
+README were all rewritten and og.png regenerated.
+
+Note the GitHub *profile* link in the site still points at github.com/Amanzing01 — that is
+deliberate, it is his code portfolio. Only the hosting account differs.
+
+Privacy: user agreed to drop the phone number. Removing it from the Contact component was
+not enough — everything in content.ts ships in the JS bundle whether or not a component
+reads it, and `grep 70384 dist/assets/*.js` still hit. Deleted the field outright and
+verified 0 occurrences in the live HTML and the live JS bundle. Contact now offers
+email + LinkedIn. The number remains in the résumé PDF, which is normal for a résumé.
+
+Deploy mechanics:
+- Two commits (initial build, then the URL/privacy change).
+- `gh repo create ... --source=. --remote=origin` created it; remote resolved to SSH, so
+  pushing the `.github/workflows/` file worked despite the gh token lacking `workflow`
+  scope (that restriction applies to HTTPS token auth, not SSH).
+- Pages was auto-enabled as `build_type: legacy` on first push. POST to the pages API
+  returns 409 once enabled — had to **PUT** `build_type=workflow` to switch it to Actions.
+  Worth remembering: POST creates, PUT reconfigures.
+- Deploy run 35742471347 succeeded in 44s.
+
+Live verification: /, og.png, portrait.jpg, video/hero.mp4, the résumé PDF and a font all
+return 200 with correct content-types; title and canonical are correct in the served HTML.
+
+Non-blocking annotations from the runner: actions/checkout@v4, configure-pages@v5,
+setup-node@v4 and upload-artifact@v4 target Node 20, which is deprecated and being forced
+onto Node 24. Worth bumping the action versions at some point.
