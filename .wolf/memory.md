@@ -305,3 +305,40 @@ return 200 with correct content-types; title and canonical are correct in the se
 Non-blocking annotations from the runner: actions/checkout@v4, configure-pages@v5,
 setup-node@v4 and upload-artifact@v4 target Node 20, which is deprecated and being forced
 onto Node 24. Worth bumping the action versions at some point.
+
+## 2026-09-22 — Mobile pass
+
+Site was written with responsive classes from the start but had never been checked at phone
+width. Audited the code rather than guessing, and found real bugs:
+
+- **Work card drift broke the phone layout.** The two-speed parallax applied `y` to
+  odd-index cards unconditionally. At md+ that is two columns drifting against each other;
+  below md the grid is a single column, so it just knocked alternating cards out of rhythm.
+  Gated behind a new `useIsDesktop()`.
+- **No navigation on phones.** Every nav link was `hidden sm:block`, leaving only the logo
+  and one button. Rebuilt Nav with a 44px hamburger and an animated dropdown sheet listing
+  all five sections. Deliberately no body scroll-lock — the sheet is a dropdown, and locking
+  would fight Lenis on the same tick a link inside it scrolls.
+- **Four stats at 375px gave each label ~78px.** Added a `short` field to `proof` used below
+  `sm` ("companies" vs "companies hiring on them"), tightened the gap, dropped the value
+  clamp floor to 1.375rem.
+- **Diagrams are 860px wide with no affordance.** Wrapped each in its own
+  `overflow-x-auto overscroll-x-contain` scroller (so horizontal drag does not bounce the
+  page) with a `lg:hidden` figcaption telling the reader it scrolls sideways.
+- **TiltCard mounted spring machinery on touch devices** where mousemove never fires. Now
+  returns a plain div unless `(pointer: fine)`.
+- **Aurora**: three ~40rem layers at `blur(72px)` are expensive to composite on phone GPUs.
+  Reduced to 44px blur and slowed the drift under 48rem.
+- **Hero** had `min-h-[94svh]` on every size; on a phone the content already exceeds the
+  viewport so it only added dead space. Now content-sized below md.
+
+Added `src/lib/useMediaQuery.ts` using `useSyncExternalStore`, so the first render already
+has the correct answer instead of flashing the wrong layout.
+
+Overflow audit at 375px: only fixed widths left are the diagram `min-w-[860px]` (inside its
+own scroller) and a `max-w-[1400px]` (a maximum, safe). Widest `whitespace-nowrap` chip is
+"Multi-tenant architecture" at ~238px against ~279px available inside a card — fits.
+
+Verification: `tsc -b`, `oxlint src`, clean build. Tried the Chrome extension again to
+actually look at it — still not connected, so this pass is reasoned from code and measured
+arithmetic, NOT seen. Mobile visual QA remains outstanding and the user should check it.

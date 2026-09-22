@@ -8,6 +8,7 @@ import {
 } from 'motion/react'
 import { useEffect, useRef, useState } from 'react'
 import { scrollToEl } from '../lib/scroll'
+import { useIsDesktop } from '../lib/useMediaQuery'
 import { work, profile, media, type CaseStudy } from '../data/content'
 import { Section } from '../components/Section'
 import { Reveal } from '../components/Reveal'
@@ -202,7 +203,10 @@ export function Work() {
   })
   const rawDrift = useTransform(scrollYProgress, [0, 1], [34, -34])
   const smoothDrift = useSpring(rawDrift, { stiffness: 90, damping: 24, mass: 0.4 })
-  const drift = reduced ? undefined : smoothDrift
+  // Only meaningful with two columns. In the single-column phone layout it would
+  // just knock alternating cards out of rhythm.
+  const isDesktop = useIsDesktop()
+  const drift = reduced || !isDesktop ? undefined : smoothDrift
 
   // Bring the opened case study into view. The panel sits below the grid, so its
   // top edge does not move as it expands — scrolling immediately is safe.

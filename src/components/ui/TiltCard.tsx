@@ -8,6 +8,7 @@ import {
 } from 'motion/react'
 import { useRef, useState, type ReactNode, type MouseEvent } from 'react'
 import { cn } from '../../lib/cn'
+import { useFinePointer } from '../../lib/useMediaQuery'
 
 type Props = {
   children: ReactNode
@@ -23,6 +24,7 @@ type Props = {
 export function TiltCard({ children, className, intensity = 7 }: Props) {
   const ref = useRef<HTMLDivElement>(null)
   const reduced = useReducedMotion()
+  const finePointer = useFinePointer()
   const [active, setActive] = useState(false)
 
   const px = useMotionValue(0.5)
@@ -50,8 +52,10 @@ export function TiltCard({ children, className, intensity = 7 }: Props) {
     py.set(0.5)
   }
 
-  if (reduced) {
-    return <div className={cn('relative', className)}>{children}</div>
+  // Touch devices never fire mousemove, so the tilt can only ever cost them
+  // perspective/transform layers for nothing.
+  if (reduced || !finePointer) {
+    return <div className={cn('relative h-full', className)}>{children}</div>
   }
 
   return (

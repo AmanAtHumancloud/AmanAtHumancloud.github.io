@@ -45,12 +45,14 @@ export function AuthPipeline() {
         }
 
   return (
-    <figure className="my-2 w-full overflow-x-auto">
+    <figure className="my-2 w-full">
+      {/* Wider than a phone: give it its own scroller with a visible hint. */}
+      <div className="-mx-1 overflow-x-auto overscroll-x-contain px-1 pb-1">
       <svg
         viewBox={`0 0 ${W} ${H}`}
         className="h-auto w-full min-w-[860px]"
         role="img"
-        aria-label="Request flow through six authorization layers: rate limit, JWT and SSO verification, tenant resolution, license check, permission check, feature gate — then the controller and database."
+        aria-label="Request flow through six authorization layers: rate limit, JWT and SSO verification, tenant resolution, license check, permission check, feature gate â then the controller and database."
       >
         <defs>
           <marker id="ap-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto">
@@ -75,7 +77,7 @@ export function AuthPipeline() {
           fontSize="13"
           {...fade(0.05)}
         >
-          in →
+          in â
         </motion.text>
 
         {LAYERS.map((layer, i) => {
@@ -189,7 +191,7 @@ export function AuthPipeline() {
           fontSize="13"
           {...fade(0.82)}
         >
-          → postgres
+          â postgres
         </motion.text>
 
         {/* caption rule */}
@@ -203,9 +205,13 @@ export function AuthPipeline() {
           {...draw(0)}
         />
         <motion.text x="8" y={Y - 38} className="fill-subtle font-mono" fontSize="14" {...fade(0)}>
-          AUTHORIZATION PIPELINE — every request, every route
+          AUTHORIZATION PIPELINE â every request, every route
         </motion.text>
       </svg>
+      </div>
+      <figcaption className="mt-2 text-[13px] text-subtle lg:hidden">
+        Scroll the diagram sideways to follow the flow →
+      </figcaption>
     </figure>
   )
 }

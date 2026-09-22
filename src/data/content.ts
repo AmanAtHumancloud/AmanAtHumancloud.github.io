@@ -68,10 +68,12 @@ export const media = {
 } as const
 
 export const proof = [
-  { value: '3', label: 'products people use daily' },
-  { value: '60+', label: 'companies hiring on them' },
-  { value: '48+', label: 'REST endpoints shipped' },
-  { value: '30%', label: 'faster API responses' },
+  // `short` is used below the sm breakpoint, where four columns leave each label
+  // about 78px of width.
+  { value: '3', label: 'products people use daily', short: 'live products' },
+  { value: '60+', label: 'companies hiring on them', short: 'companies' },
+  { value: '48+', label: 'REST endpoints shipped', short: 'endpoints' },
+  { value: '30%', label: 'faster API responses', short: 'faster APIs' },
 ] as const
 
 export type CaseStudy = {

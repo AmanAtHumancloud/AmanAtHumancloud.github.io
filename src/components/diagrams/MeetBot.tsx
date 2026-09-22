@@ -6,7 +6,7 @@ const STAGES = [
   { name: 'FFmpeg capture', note: 'live audio out' },
   { name: 'Whisper', note: 'self-hosted STT' },
   { name: 'Gemini Flash', note: 'structured summary' },
-  { name: 'Inbox + dashboard', note: 'email · Next.js' },
+  { name: 'Inbox + dashboard', note: 'email Â· Next.js' },
 ]
 
 const W = 1080
@@ -43,7 +43,9 @@ export function MeetBot() {
   const queueY = Y + BOX_H + 34
 
   return (
-    <figure className="my-2 w-full overflow-x-auto">
+    <figure className="my-2 w-full">
+      {/* Wider than a phone: give it its own scroller with a visible hint. */}
+      <div className="-mx-1 overflow-x-auto overscroll-x-contain px-1 pb-1">
       <svg
         viewBox={`0 0 ${W} ${H}`}
         className="h-auto w-full min-w-[860px]"
@@ -58,7 +60,7 @@ export function MeetBot() {
 
         <motion.line x1="8" y1={Y - 28} x2={W - 8} y2={Y - 28} stroke="#e7e3dc" strokeWidth="1" {...draw(0)} />
         <motion.text x="8" y={Y - 38} className="fill-subtle font-mono" fontSize="14" {...fade(0)}>
-          ASYNC PIPELINE — each stage retries without redoing the last
+          ASYNC PIPELINE â each stage retries without redoing the last
         </motion.text>
 
         {STAGES.map((stage, i) => {
@@ -144,9 +146,13 @@ export function MeetBot() {
           fontSize="13"
           {...fade(0.68)}
         >
-          BullMQ on Redis — scheduling, retries, backoff
+          BullMQ on Redis â scheduling, retries, backoff
         </motion.text>
       </svg>
+      </div>
+      <figcaption className="mt-2 text-[13px] text-subtle lg:hidden">
+        Scroll the diagram sideways to follow the flow →
+      </figcaption>
     </figure>
   )
 }

@@ -50,9 +50,11 @@ export function Hero({ start }: { start: boolean }) {
   })
 
   return (
+    // On a phone the hero content is already taller than the viewport, so a
+    // min-height only adds dead space; let it size to content and pin it at md+.
     <header
       id="top"
-      className="relative flex min-h-[94svh] flex-col justify-center overflow-hidden px-5 pt-32 pb-14 sm:px-8"
+      className="relative flex flex-col justify-center overflow-hidden px-5 pt-28 pb-12 sm:px-8 md:min-h-[94svh] md:pt-32 md:pb-14"
     >
       <Aurora />
 

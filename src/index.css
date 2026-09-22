@@ -146,6 +146,15 @@
   animation: aurora-drift 22s ease-in-out infinite;
 }
 
+/* Large blurred layers are expensive to composite on phone GPUs, and the blobs
+   are mostly off-canvas at that width anyway. Shrink the blur and slow it down. */
+@media (max-width: 47.99rem) {
+  .aurora-blob {
+    filter: blur(44px);
+    animation-duration: 34s;
+  }
+}
+
 /* Marquee — the scrolling tech strip. */
 @keyframes marquee-x {
   from {
