@@ -1,0 +1,113 @@
+{
+  "bugs": [
+    {
+      "id": "tailwind-token-text-base-collision",
+      "date": "2026-09-22",
+      "error_message": "Mint CTA button rendered with wrong text color; `text-base` resolved as a font-size utility instead of the custom color.",
+      "root_cause": "Named a Tailwind v4 @theme color token `--color-base`, which produces `text-base` / `bg-base` utilities that collide with Tailwind's built-in `text-base` font-size utility.",
+      "fix": "Renamed the page-background token to `--color-void` (`bg-void` / `text-void`) in src/index.css and updated usages.",
+      "tags": [
+        "tailwind",
+        "tailwind-v4",
+        "design-tokens",
+        "naming-collision",
+        "css"
+      ]
+    },
+    {
+      "id": "sed-rename-clobbered-font-size",
+      "date": "2026-09-22",
+      "error_message": "Hero paragraph lost its font size — `text-base` became `text-void`.",
+      "root_cause": "Ran a file-wide `sed s/text-base/text-void/g` while renaming a color token. The pattern also matched a legitimate Tailwind font-size class on an unrelated element.",
+      "fix": "Restored `text-base` on the hero paragraph with a scoped sed anchored on surrounding classes; verified every remaining hit by grep.",
+      "tags": [
+        "sed",
+        "refactor",
+        "tailwind",
+        "regression"
+      ]
+    },
+    {
+      "id": "bash-heredoc-apostrophe-parse-error",
+      "date": "2026-09-22",
+      "error_message": "/usr/bin/bash: -c: line 153: unexpected EOF while looking for matching `'",
+      "root_cause": "Wrote a large TSX/TS content file containing prose with apostrophes and em dashes through a bash quoted heredoc; the shell mis-parsed the quoting.",
+      "fix": "Used the Write tool for prose-heavy source files instead of heredocs; used a small node script for targeted string replacements afterward.",
+      "tags": [
+        "bash",
+        "heredoc",
+        "quoting",
+        "tooling",
+        "windows"
+      ]
+    },
+    {
+      "id": "sharp-fontface-woff2-fallback",
+      "date": "2026-09-22",
+      "error_message": "og.png headline rendered in a serif font instead of Satoshi.",
+      "root_cause": "sharp's librsvg backend does not load @font-face declarations that embed woff2 as a base64 data URI; it silently falls back to a default serif.",
+      "fix": "Switched scripts/og.mjs to a system font stack ('Segoe UI' / Consolas) so the rendered card is sans-serif and on-brand.",
+      "tags": [
+        "sharp",
+        "librsvg",
+        "svg",
+        "fonts",
+        "og-image"
+      ]
+    },
+    {
+      "id": "node-tmp-path-mismatch-gitbash",
+      "date": "2026-09-22",
+      "error_message": "Error: ENOENT: no such file or directory, open 'C:\\tmp\\fs.css'",
+      "root_cause": "Git Bash maps /tmp to its own temp root, but Node resolves the literal path '/tmp/...' to C:\\tmp on Windows.",
+      "fix": "Wrote intermediates to the session scratchpad directory and passed absolute paths into node via argv.",
+      "tags": [
+        "windows",
+        "git-bash",
+        "node",
+        "paths",
+        "tooling"
+      ]
+    },
+    {
+      "id": "sharp-tint-after-grayscale-noop",
+      "date": "2026-09-22",
+      "error_message": "All three duotone portrait variants rendered identically as plain black and white; .tint() had no visible effect.",
+      "root_cause": "sharp .grayscale() leaves the pipeline single-band, so a following .tint() has no colour channels to act on and is silently a no-op.",
+      "fix": "Render the grayscale stage to a buffer with .toColourspace(\"srgb\").png(), then reload it and map luminance to shadow/highlight colours with a per-channel .linear(aArray, bArray). This is a real duotone rather than a tint.",
+      "tags": [
+        "sharp",
+        "image-processing",
+        "duotone",
+        "grayscale",
+        "silent-failure"
+      ]
+    },
+    {
+      "id": "sharp-linear-band-expansion",
+      "date": "2026-09-22",
+      "error_message": "Error: Band expansion using linear is unsupported",
+      "root_cause": "Called .linear() with three-element arrays on a pipeline that was still single-band after .grayscale(); .toColourspace(\"srgb\") does not materialise three bands until the pipeline is executed.",
+      "fix": "Split into two passes — write the grayscale image to a PNG buffer first (which does materialise 3 channels), then apply the per-channel .linear() to the reloaded buffer.",
+      "tags": [
+        "sharp",
+        "image-processing",
+        "linear",
+        "pipeline"
+      ]
+    },
+    {
+      "id": "jfif-not-read-as-image",
+      "date": "2026-09-22",
+      "error_message": "Read tool rendered a .jfif photo as thousands of lines of binary text instead of an image.",
+      "root_cause": ".jfif is a JPEG but the extension is not in the image allowlist, so the file was treated as text.",
+      "fix": "Converted the source to PNG with sharp into the scratchpad first, then read that to view it. Always convert unusual image extensions before reading.",
+      "tags": [
+        "tooling",
+        "images",
+        "jfif",
+        "windows"
+      ]
+    }
+  ]
+}

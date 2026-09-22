@@ -1,0 +1,232 @@
+@import 'tailwindcss';
+
+/* ---------------------------------------------------------------- fonts */
+
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/fonts/Satoshi-400.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/fonts/Satoshi-500.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/fonts/Satoshi-700.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/fonts/Satoshi-900.woff2') format('woff2');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('/fonts/JetBrainsMono-var.woff2') format('woff2');
+  font-weight: 100 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* --------------------------------------------------------------- tokens */
+
+@theme {
+  /* surfaces — warm paper, not clinical white */
+  --color-paper: #fbfaf8;
+  --color-card: #ffffff;
+  --color-sunk: #f4f2ee;
+  --color-line: #e7e3dc;
+  --color-line-soft: #f0ede7;
+
+  /* text — every one of these clears 7:1 on paper */
+  --color-ink: #14141a; /* 16.1:1 */
+  --color-body: #45454f; /* 8.2:1  */
+  --color-subtle: #5f5f6b; /* 6.1:1  — labels only, never prose */
+
+  /* accent */
+  --color-indigo: #4f46e5;
+  --color-indigo-deep: #4338ca;
+  --color-violet: #7c3aed;
+  --color-glow: #eef2ff;
+
+  --font-display: 'Satoshi', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', monospace;
+
+  /* type scale — floors raised after readability feedback */
+  --text-body: 1.0625rem; /* 17px  */
+  --text-body-lg: 1.1875rem; /* 19px  */
+  --text-lead: 1.375rem; /* 22px  */
+}
+
+/* ----------------------------------------------------------------- base */
+
+@layer base {
+  html {
+    background-color: var(--color-paper);
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-display);
+    font-size: var(--text-body);
+    line-height: 1.65;
+    font-synthesis-weight: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background-color: var(--color-indigo);
+    color: #fff;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-indigo);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ------------------------------------------------------------- utilities */
+
+@utility label {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem; /* 13px — was 11px, too small */
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-subtle);
+}
+
+/* ------------------------------------------------------------ animation */
+
+/* Aurora — the slow-drifting color field behind the hero. */
+@keyframes aurora-drift {
+  0% {
+    transform: translate3d(-8%, -4%, 0) scale(1);
+  }
+  33% {
+    transform: translate3d(6%, 5%, 0) scale(1.12);
+  }
+  66% {
+    transform: translate3d(-4%, 8%, 0) scale(0.95);
+  }
+  100% {
+    transform: translate3d(-8%, -4%, 0) scale(1);
+  }
+}
+
+.aurora-blob {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(72px);
+  will-change: transform;
+  animation: aurora-drift 22s ease-in-out infinite;
+}
+
+/* Marquee — the scrolling tech strip. */
+@keyframes marquee-x {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee-track {
+  animation: marquee-x var(--marquee-duration, 40s) linear infinite;
+  will-change: transform;
+}
+
+.marquee-mask {
+  mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+}
+
+/* Shimmer sweep for the primary button. */
+@keyframes shimmer-x {
+  from {
+    transform: translateX(-120%);
+  }
+  to {
+    transform: translateX(220%);
+  }
+}
+
+/* A still image in the inline pill gets a slow drift, so it reads as motion
+   rather than a pasted photo. Swapped out the moment a real clip is supplied. */
+@keyframes pill-drift {
+  0%,
+  100% {
+    transform: scale(1.12) translate3d(-1.5%, 0, 0);
+  }
+  50% {
+    transform: scale(1.2) translate3d(1.5%, -1.5%, 0);
+  }
+}
+
+.pill-drift {
+  animation: pill-drift 14s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* A faint blueprint grid — much softer than the old dot matrix. */
+.paper-grid {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, rgba(20, 20, 26, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(20, 20, 26, 0.035) 1px, transparent 1px);
+  background-size: 72px 72px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 10%, transparent 75%);
+}
+
+/* 3D tilt plumbing. */
+.tilt-scene {
+  perspective: 1200px;
+}
+.tilt-layer {
+  transform-style: preserve-3d;
+}
+
+/* -------------------------------------------------- motion preferences */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .aurora-blob,
+  .marquee-track,
+  .pill-drift {
+    animation: none !important;
+  }
+}
