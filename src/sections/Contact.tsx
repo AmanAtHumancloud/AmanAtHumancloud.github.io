@@ -46,10 +46,12 @@ export function Contact() {
             </Magnetic>
 
             <a
-              href={`tel:${profile.phone.replace(/\s/g, '')}`}
+              href={profile.links.linkedin}
+              target="_blank"
+              rel="noreferrer noopener"
               className="rounded-full border border-line bg-paper px-8 py-5 text-[17px] font-medium text-ink transition-colors duration-300 hover:border-indigo hover:text-indigo"
             >
-              {profile.phone}
+              Message me on LinkedIn
             </a>
           </div>
         </Reveal>

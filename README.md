@@ -21,7 +21,7 @@ npm run preview
 Push to `main`. The workflow in `.github/workflows/deploy.yml` builds and publishes to Pages.
 One-time setup: repo Settings -> Pages -> Source = **GitHub Actions**.
 
-The repo must be named `Amanzing01.github.io` for the site to live at the root domain.
+The repo must be named `AmanAtHumancloud.github.io` for the site to live at the root domain.
 For a custom domain later, add a `CNAME` file in `public/` containing the domain.
 
 ## To replace

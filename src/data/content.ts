@@ -17,7 +17,8 @@ export const profile = {
   available: true,
   availableLabel: 'Open to full-stack / backend roles',
   email: 'amanzing2001@gmail.com',
-  phone: '+91 70384 85490',
+  // No phone here on purpose: anything in this file ships in the JS bundle and is
+  // scrapable, whether or not a component renders it. It is on the résumé PDF.
   links: {
     github: 'https://github.com/Amanzing01',
     linkedin: 'https://linkedin.com/in/amanzing2001',

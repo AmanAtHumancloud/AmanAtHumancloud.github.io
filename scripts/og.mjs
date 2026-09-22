@@ -63,7 +63,7 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" v
 
   <text x="80" y="536" class="d" font-size="21">React · Next.js · Node · NestJS · PostgreSQL</text>
   <text x="80" y="568" class="a" font-size="21">3 products people use daily</text>
-  <text x="80" y="600" class="d" font-size="21">Pune, India · amanzing01.github.io</text>
+  <text x="80" y="600" class="d" font-size="21">Pune, India · amanathumancloud.github.io</text>
 </svg>`
 
 const out = resolve(root, 'public/og.png')
