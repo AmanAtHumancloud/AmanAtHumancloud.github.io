@@ -23,12 +23,13 @@ import sharp from 'sharp'
 const here = dirname(fileURLToPath(import.meta.url))
 const root = resolve(here, '..')
 
-const SRC = process.env.PORTRAIT_SRC ?? 'C:/Users/loq_h/Downloads/Image (3).jfif'
+const SRC = process.env.PORTRAIT_SRC ?? 'C:/Users/loq_h/Downloads/Image (2).jfif'
 
-// Source is 768x1024. The phone occupies roughly x466-640, so 466 is the widest
-// 4:5 crop that keeps it out of frame entirely — anything wider clips through it.
-const CROP = { left: 0, top: 140, width: 466, height: 582 }
-const OUT_SIZE = [800, 1000]
+// Source is 768x1024. 768x960 is the largest 4:5 crop it contains; trimming from
+// the bottom keeps the face centred. Nearly the full frame, so the 900x1125 output
+// is only a ~1.2x upscale.
+const CROP = { left: 0, top: 32, width: 768, height: 960 }
+const OUT_SIZE = [900, 1125]
 
 // luminance 0 -> shadow, 255 -> highlight
 const SHADOW = [30, 27, 75] // indigo-950

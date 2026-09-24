@@ -342,3 +342,14 @@ own scroller) and a `max-w-[1400px]` (a maximum, safe). Widest `whitespace-nowra
 Verification: `tsc -b`, `oxlint src`, clean build. Tried the Chrome extension again to
 actually look at it — still not connected, so this pass is reasoned from code and measured
 arithmetic, NOT seen. Mobile visual QA remains outstanding and the user should check it.
+
+## 2026-09-24 — Portrait reverted to the first photo
+
+User asked to go back to the original headshot. Repointed `scripts/portrait.mjs` at
+`Image (2).jfif` and restored that photo's crop: `{left:0, top:32, width:768, height:960}`
+at 900x1125 output. That is the largest 4:5 region the 768x1024 source contains, trimmed
+from the bottom to keep the face centred, so it is only a ~1.2x upscale — noticeably better
+than the 1.7x the selfie crop needed.
+
+Regenerated portrait.jpg, portrait-bw.jpg and og.png (which embeds the portrait), rebuilt
+and deployed. The duotone treatment is unchanged.
